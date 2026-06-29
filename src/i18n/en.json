@@ -24,6 +24,7 @@
   "statusLive": "live",
   "statusIdle": "idle",
   "auto": "auto-detecting…",
+  "pose": "Pose",
   "settings": "Tuning",
   "settingsTitle": "Step tuning",
   "settingsHint": "Changes apply live. Lower threshold / hold = advances more easily.",

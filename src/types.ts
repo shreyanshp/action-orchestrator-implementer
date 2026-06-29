@@ -79,6 +79,11 @@ export interface Hand {
   landmarks: Point[];
 }
 
+/** One body-pose landmark (BlazePose 33-point model), with visibility. */
+export interface PoseLandmark extends Point {
+  visibility: number; // 0..1 confidence the landmark is visible
+}
+
 export interface DetectedObject {
   label: string;
   score: number;
@@ -90,6 +95,8 @@ export interface PerceptionFrame {
   hands: Hand[];
   /** Mouth center landmark, or null if no face detected. */
   mouth: Point | null;
+  /** Body-pose landmarks (33), or null if no person detected. */
+  pose: PoseLandmark[] | null;
   objects: DetectedObject[];
   width: number; // source pixel width (reference only)
   height: number; // source pixel height (reference only)

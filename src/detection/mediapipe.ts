@@ -11,8 +11,9 @@ import {
   HandLandmarker,
   FaceLandmarker,
   ObjectDetector,
+  PoseLandmarker,
 } from "@mediapipe/tasks-vision";
-import { DetectedObject, Hand, Point } from "../types";
+import { DetectedObject, Hand, Point, PoseLandmark } from "../types";
 
 const WASM_ROOT =
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/wasm";
@@ -22,6 +23,8 @@ const FACE_MODEL =
   "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 const OBJECT_MODEL =
   "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite";
+const POSE_MODEL =
+  "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
 
 // MediaPipe face-mesh mouth landmark indices (inner upper/lower lip).
 const MOUTH_IDX = [13, 14];
@@ -30,11 +33,12 @@ export interface Detectors {
   hand: HandLandmarker;
   face: FaceLandmarker;
   object: ObjectDetector;
+  pose: PoseLandmarker;
 }
 
 export async function loadDetectors(): Promise<Detectors> {
   const vision = await FilesetResolver.forVisionTasks(WASM_ROOT);
-  const [hand, face, object] = await Promise.all([
+  const [hand, face, object, pose] = await Promise.all([
     HandLandmarker.createFromOptions(vision, {
       baseOptions: { modelAssetPath: HAND_MODEL, delegate: "GPU" },
       runningMode: "VIDEO",
@@ -51,8 +55,13 @@ export async function loadDetectors(): Promise<Detectors> {
       scoreThreshold: 0.3,
       maxResults: 8,
     }),
+    PoseLandmarker.createFromOptions(vision, {
+      baseOptions: { modelAssetPath: POSE_MODEL, delegate: "GPU" },
+      runningMode: "VIDEO",
+      numPoses: 1,
+    }),
   ]);
-  return { hand, face, object };
+  return { hand, face, object, pose };
 }
 
 export function detectHands(
@@ -87,6 +96,17 @@ export function detectMouth(
     }
   }
   return n ? { x: x / n, y: y / n } : null;
+}
+
+export function detectPose(
+  d: Detectors,
+  video: HTMLVideoElement,
+  ts: number,
+): PoseLandmark[] | null {
+  const res = d.pose.detectForVideo(video, ts);
+  const lm = res.landmarks?.[0];
+  if (!lm) return null;
+  return lm.map((p) => ({ x: p.x, y: p.y, visibility: p.visibility ?? 1 }));
 }
 
 export function detectObjects(

@@ -11,7 +11,7 @@ function hand(points: Record<number, [number, number]>): Hand {
 }
 
 function frame(partial: Partial<PerceptionFrame>): PerceptionFrame {
-  return { hands: [], mouth: null, objects: [], width: 1280, height: 720, ...partial };
+  return { hands: [], mouth: null, pose: null, objects: [], width: 1280, height: 720, ...partial };
 }
 
 describe("clamp01", () => {
