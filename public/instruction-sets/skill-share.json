@@ -1,0 +1,30 @@
+{
+  "task_id": "skill-share",
+  "title": { "en": "Skill share", "ja": "スキルシェア" },
+  "steps": [
+    {
+      "id": "lift",
+      "title": { "en": "Lift the bottle", "ja": "ボトルを持ち上げる" },
+      "instruction": { "en": "Pick up the bottle with your hand.", "ja": "手でボトルを持ち上げてください。" },
+      "anchor": { "type": "object", "label": "bottle" },
+      "pointer": "arrow",
+      "complete_when": { "signal": "hand_bottle_proximity", "threshold": 0.45, "hold_frames": 4 }
+    },
+    {
+      "id": "cap",
+      "title": { "en": "Open the cap", "ja": "キャップを開ける" },
+      "instruction": { "en": "Bring your hand to the top of the bottle and open the cap.", "ja": "ボトルの上部に手を近づけてキャップを開けてください。" },
+      "anchor": { "type": "object", "label": "bottle", "region": "top" },
+      "pointer": "highlight",
+      "complete_when": { "signal": "neck_hand_proximity", "threshold": 0.5, "hold_frames": 5 }
+    },
+    {
+      "id": "drink",
+      "title": { "en": "Take a drink", "ja": "飲む" },
+      "instruction": { "en": "Raise the bottle to your mouth and take a drink.", "ja": "ボトルを口元まで上げて飲んでください。" },
+      "anchor": { "type": "landmark", "label": "mouth" },
+      "pointer": "highlight",
+      "complete_when": { "signal": "bottle_tilt", "threshold": 0.5, "hold_frames": 3 }
+    }
+  ]
+}

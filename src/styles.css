@@ -1,0 +1,274 @@
+:root {
+  --bg: #0a0e14;
+  --panel: #121823;
+  --panel-2: #1a2230;
+  --line: #25303f;
+  --text: #e8eef6;
+  --muted: #8a99ad;
+  --accent: #38e8ff;
+  --accent-dim: #1e6f7e;
+  --done: #37f5a0;
+  --warn: #ffb347;
+  --danger: #ff5c6c;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 8px 14px;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+button:hover { border-color: var(--accent-dim); }
+button:active { transform: translateY(1px); }
+
+button.primary {
+  background: var(--accent);
+  color: #04141a;
+  border-color: transparent;
+  font-weight: 600;
+}
+button.primary:hover { filter: brightness(1.05); }
+button.primary.big { padding: 12px 28px; font-size: 16px; }
+button.ghost { background: transparent; }
+button.small { padding: 4px 10px; font-size: 12px; }
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #04141a;
+  font-size: 20px; font-weight: 700;
+}
+.brandTitle { font-weight: 700; letter-spacing: 0.3px; }
+.brandTag { font-size: 12px; color: var(--muted); }
+.topActions { display: flex; align-items: center; gap: 10px; }
+
+.langToggle { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.langToggle button { border: none; border-radius: 0; background: transparent; padding: 8px 12px; font-size: 12px; }
+.langToggle button.active { background: var(--accent); color: #04141a; font-weight: 600; }
+
+.sampleSwitch { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.sampleSwitch button { border: none; border-radius: 0; background: transparent; padding: 8px 12px; font-size: 13px; color: var(--muted); }
+.sampleSwitch button.active { background: var(--panel-2); color: var(--accent); font-weight: 600; }
+
+/* Main */
+.main { flex: 1; min-height: 0; display: flex; }
+
+/* Landing */
+.landing { flex: 1; display: grid; place-items: center; padding: 24px; }
+.landingCard {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 460px; width: 100%;
+  text-align: center;
+}
+.landingKicker { color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.landingCard h1 { margin: 8px 0 16px; font-size: 28px; }
+.landingSteps {
+  text-align: left;
+  margin: 0 auto 20px;
+  max-width: 300px;
+  color: var(--text);
+  line-height: 1.9;
+}
+.landingHint { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+
+/* Stage */
+.stage { flex: 1; display: grid; place-items: center; padding: 16px; min-height: 0; }
+.videoWrap {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scaleX(-1); /* selfie mirror */
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.stageTop {
+  position: absolute;
+  top: 12px; left: 12px; right: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text);
+  background: rgba(10, 14, 20, 0.55);
+  backdrop-filter: blur(6px);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.stageTop .sep { color: var(--muted); }
+.stageTop .topRight { margin-left: auto; display: flex; gap: 8px; pointer-events: auto; }
+.stageTop button { pointer-events: auto; }
+.stageTop button.on { border-color: var(--accent); color: var(--accent); }
+.statusDot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.statusDot.ok { background: var(--done); box-shadow: 0 0 8px var(--done); }
+.statusDot.warn { background: var(--warn); }
+
+.stepChips {
+  position: absolute;
+  top: 52px; left: 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.chip {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(18, 24, 35, 0.7);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.chip.active { border-color: var(--accent); color: var(--accent); }
+.chip.done { border-color: var(--done); color: var(--done); }
+.chip.done::before { content: "✓ "; }
+
+.stepCard {
+  position: absolute;
+  left: 50%; bottom: 16px;
+  transform: translateX(-50%);
+  width: min(440px, calc(100% - 32px));
+  background: rgba(10, 14, 20, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  pointer-events: auto;
+}
+.stepCardHead { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); }
+.stepTitle { font-size: 20px; font-weight: 700; margin: 4px 0 4px; }
+.stepInstruction { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+.holdBar { height: 6px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+.holdFill { height: 100%; background: var(--done); transition: width 0.12s linear; }
+.stepHint { font-size: 12px; color: var(--muted); margin: 8px 0 12px; }
+.stepCard .primary { width: 100%; }
+
+.centerCard {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 14, 20, 0.85);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  text-align: center;
+  max-width: 80%;
+}
+.centerCard.error { border-color: var(--danger); color: var(--danger); }
+
+.finished { pointer-events: auto; }
+.finishedCheck {
+  width: 64px; height: 64px; margin: 0 auto 12px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--done); color: #04141a;
+  font-size: 36px; font-weight: 700;
+}
+.finishedTitle { font-size: 24px; font-weight: 700; }
+.finishedBody { color: var(--muted); margin: 6px 0 18px; }
+.finishedActions { display: flex; gap: 10px; justify-content: center; }
+
+/* Tuning panel */
+.settingsPanel {
+  position: absolute;
+  top: 52px; right: 12px;
+  width: min(340px, calc(100% - 24px));
+  max-height: calc(100% - 72px);
+  overflow-y: auto;
+  background: rgba(10, 14, 20, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.settingsHead { display: flex; align-items: center; justify-content: space-between; font-weight: 700; }
+.settingsDetect { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); align-items: center; }
+.settingsDetect .ok { color: var(--done); }
+.settingsDetect .off { color: var(--danger); opacity: 0.6; }
+.settingsHint { font-size: 11px; color: var(--muted); margin: 0; }
+
+.tuneRow {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tuneRow.current { border-color: var(--accent); }
+.tuneTop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tuneName { font-size: 13px; font-weight: 600; }
+.tuneTop code { font-size: 10px; color: var(--muted); }
+.tuneMeter {
+  position: relative;
+  height: 10px;
+  background: var(--panel-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.meterFill { height: 100%; transition: width 0.08s linear; }
+.meterThr {
+  position: absolute; top: -2px; bottom: -2px; width: 2px;
+  background: #fff; opacity: 0.85;
+  overflow: visible;
+}
+.tuneLabels { font-size: 11px; color: var(--muted); }
+.tuneSlider { display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: var(--muted); }
+.tuneSlider input { width: 100%; accent-color: var(--accent); }
+
+@media (max-width: 600px) {
+  .brandTag { display: none; }
+  .stepChips { display: none; }
+}
