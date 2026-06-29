@@ -4,7 +4,7 @@
 // Use normToCanvas() to map normalized [0,1] perception coordinates, applying
 // horizontal mirroring to match the selfie-mirrored video.
 
-import { Point, PoseLandmark } from "../types";
+import { Hand, Point, PoseLandmark } from "../types";
 
 export interface ViewMap {
   cw: number; // canvas logical width
@@ -54,6 +54,52 @@ export function drawPose(
     ctx.beginPath();
     ctx.arc(P.x, P.y, 4, 0, Math.PI * 2);
     ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** MediaPipe 21-point hand connections (palm + 5 fingers). */
+const HAND_CONNECTIONS: [number, number][] = [
+  [0, 1], [1, 2], [2, 3], [3, 4],          // thumb
+  [0, 5], [5, 6], [6, 7], [7, 8],          // index
+  [5, 9], [9, 10], [10, 11], [11, 12],     // middle
+  [9, 13], [13, 14], [14, 15], [15, 16],   // ring
+  [13, 17], [17, 18], [18, 19], [19, 20],  // pinky
+  [0, 17],                                  // palm base
+];
+
+/** Draw the hand skeleton for each detected hand. */
+export function drawHands(
+  ctx: CanvasRenderingContext2D,
+  hands: Hand[],
+  view: ViewMap,
+  color: string,
+) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = "round";
+
+  for (const hand of hands) {
+    const lm = hand.landmarks;
+    for (const [a, b] of HAND_CONNECTIONS) {
+      const pa = lm[a];
+      const pb = lm[b];
+      if (!pa || !pb) continue;
+      const A = normToCanvas(pa, view);
+      const B = normToCanvas(pb, view);
+      ctx.beginPath();
+      ctx.moveTo(A.x, A.y);
+      ctx.lineTo(B.x, B.y);
+      ctx.stroke();
+    }
+    for (const p of lm) {
+      const P = normToCanvas(p, view);
+      ctx.beginPath();
+      ctx.arc(P.x, P.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   ctx.restore();
 }

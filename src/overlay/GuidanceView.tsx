@@ -10,6 +10,7 @@ import {
   ViewMap,
   drawArrow,
   drawBBox,
+  drawHands,
   drawHighlight,
   drawPose,
   drawProgressArc,
@@ -20,6 +21,7 @@ const MIRROR = true;
 const ACCENT = "#38e8ff";
 const DONE = "#37f5a0";
 const POSE_COLOR = "rgba(155,140,255,0.9)";
+const HAND_COLOR = "rgba(255,179,71,0.95)";
 
 interface Props {
   set: InstructionSet;
@@ -147,8 +149,9 @@ export function GuidanceView({ set, lang, onExit }: Props) {
     ctx.clearRect(0, 0, cw, ch);
     const view: ViewMap = { cw, ch, mirror: MIRROR };
 
-    if (showPoseRef.current && frame.pose) {
-      drawPose(ctx, frame.pose, view, POSE_COLOR);
+    if (showPoseRef.current) {
+      if (frame.pose) drawPose(ctx, frame.pose, view, POSE_COLOR);
+      if (frame.hands.length > 0) drawHands(ctx, frame.hands, view, HAND_COLOR);
     }
 
     const bottle = findBottle(frame);
