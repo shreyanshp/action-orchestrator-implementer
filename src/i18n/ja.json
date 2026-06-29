@@ -24,6 +24,7 @@
   "statusLive": "ライブ",
   "statusIdle": "待機",
   "auto": "自動検出中…",
+  "pose": "ポーズ",
   "settings": "調整",
   "settingsTitle": "ステップ調整",
   "settingsHint": "変更は即時反映。しきい値／保持を下げると進みやすくなります。",

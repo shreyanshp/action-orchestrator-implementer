@@ -11,6 +11,7 @@ import {
   drawArrow,
   drawBBox,
   drawHighlight,
+  drawPose,
   drawProgressArc,
   normToCanvas,
 } from "./draw";
@@ -18,6 +19,7 @@ import {
 const MIRROR = true;
 const ACCENT = "#38e8ff";
 const DONE = "#37f5a0";
+const POSE_COLOR = "rgba(155,140,255,0.9)";
 
 interface Props {
   set: InstructionSet;
@@ -61,6 +63,7 @@ interface Hud {
   bottleSeen: boolean;
   mouthSeen: boolean;
   handsSeen: number;
+  poseSeen: boolean;
 }
 
 const EMPTY_HUD: Hud = {
@@ -73,6 +76,7 @@ const EMPTY_HUD: Hud = {
   bottleSeen: false,
   mouthSeen: false,
   handsSeen: 0,
+  poseSeen: false,
 };
 
 export function GuidanceView({ set, lang, onExit }: Props) {
@@ -97,6 +101,9 @@ export function GuidanceView({ set, lang, onExit }: Props) {
   };
 
   const [showSettings, setShowSettings] = useState(false);
+  const [showPose, setShowPose] = useState(false);
+  const showPoseRef = useRef(showPose);
+  showPoseRef.current = showPose;
   const [hud, setHud] = useState<Hud>(EMPTY_HUD);
 
   useEffect(() => {
@@ -140,6 +147,10 @@ export function GuidanceView({ set, lang, onExit }: Props) {
     ctx.clearRect(0, 0, cw, ch);
     const view: ViewMap = { cw, ch, mirror: MIRROR };
 
+    if (showPoseRef.current && frame.pose) {
+      drawPose(ctx, frame.pose, view, POSE_COLOR);
+    }
+
     const bottle = findBottle(frame);
     if (bottle) {
       const tl = normToCanvas({ x: bottle.bbox.x, y: bottle.bbox.y }, view);
@@ -172,6 +183,7 @@ export function GuidanceView({ set, lang, onExit }: Props) {
       bottleSeen: !!bottle,
       mouthSeen: !!frame.mouth,
       handsSeen: frame.hands.length,
+      poseSeen: !!frame.pose,
     });
   }, [videoRef]);
 
@@ -205,6 +217,13 @@ export function GuidanceView({ set, lang, onExit }: Props) {
           <span className="sep">·</span>
           <span>{t(lang, "fps")} {hud.fps}</span>
           <div className="topRight">
+            <button
+              className={`ghost small ${showPose ? "on" : ""}`}
+              onClick={() => setShowPose((v) => !v)}
+              title={t(lang, "pose")}
+            >
+              {showPose ? "👁" : "🚫"} {t(lang, "pose")}
+            </button>
             <button className={`ghost small ${showSettings ? "on" : ""}`} onClick={() => setShowSettings((v) => !v)}>
               ⚙ {t(lang, "settings")}
             </button>
@@ -269,6 +288,7 @@ export function GuidanceView({ set, lang, onExit }: Props) {
               <span className={hud.bottleSeen ? "ok" : "off"}>● {t(lang, "bottle")}</span>
               <span className={hud.mouthSeen ? "ok" : "off"}>● {t(lang, "mouth")}</span>
               <span className={hud.handsSeen > 0 ? "ok" : "off"}>● {t(lang, "hands")} {hud.handsSeen}</span>
+              <span className={hud.poseSeen ? "ok" : "off"}>● {t(lang, "pose")}</span>
             </div>
             <p className="settingsHint">{t(lang, "settingsHint")}</p>
 

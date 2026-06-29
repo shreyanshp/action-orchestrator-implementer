@@ -5,6 +5,7 @@ import {
   detectHands,
   detectMouth,
   detectObjects,
+  detectPose,
   loadDetectors,
 } from "./mediapipe";
 
@@ -83,6 +84,7 @@ export function useDetection(
 
       const hands = detectHands(d, v, ts);
       const mouth = detectMouth(d, v, ts);
+      const pose = detectPose(d, v, ts);
       if (frameCount % OBJECT_EVERY === 0) {
         const objs = detectObjects(d, v, ts);
         if (objs.length > 0) {
@@ -107,6 +109,7 @@ export function useDetection(
         {
           hands,
           mouth,
+          pose,
           objects: lastObjects,
           width: v.videoWidth,
           height: v.videoHeight,

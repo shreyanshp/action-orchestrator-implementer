@@ -4,12 +4,58 @@
 // Use normToCanvas() to map normalized [0,1] perception coordinates, applying
 // horizontal mirroring to match the selfie-mirrored video.
 
-import { Point } from "../types";
+import { Point, PoseLandmark } from "../types";
 
 export interface ViewMap {
   cw: number; // canvas logical width
   ch: number; // canvas logical height
   mirror: boolean;
+}
+
+/** BlazePose 33-point skeleton connections (torso + limbs). */
+const POSE_CONNECTIONS: [number, number][] = [
+  [11, 12], [11, 13], [13, 15], [15, 17], [15, 19], [15, 21], [17, 19],
+  [12, 14], [14, 16], [16, 18], [16, 20], [16, 22], [18, 20],
+  [11, 23], [12, 24], [23, 24],
+  [23, 25], [25, 27], [27, 29], [29, 31], [27, 31],
+  [24, 26], [26, 28], [28, 30], [30, 32], [28, 32],
+];
+
+const POSE_MIN_VIS = 0.5;
+
+/** Draw the body-pose skeleton (connections + joints). */
+export function drawPose(
+  ctx: CanvasRenderingContext2D,
+  landmarks: PoseLandmark[],
+  view: ViewMap,
+  color: string,
+) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+
+  for (const [a, b] of POSE_CONNECTIONS) {
+    const pa = landmarks[a];
+    const pb = landmarks[b];
+    if (!pa || !pb || pa.visibility < POSE_MIN_VIS || pb.visibility < POSE_MIN_VIS) continue;
+    const A = normToCanvas(pa, view);
+    const B = normToCanvas(pb, view);
+    ctx.beginPath();
+    ctx.moveTo(A.x, A.y);
+    ctx.lineTo(B.x, B.y);
+    ctx.stroke();
+  }
+
+  for (const p of landmarks) {
+    if (p.visibility < POSE_MIN_VIS) continue;
+    const P = normToCanvas(p, view);
+    ctx.beginPath();
+    ctx.arc(P.x, P.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
 }
 
 export function normToCanvas(p: Point, view: ViewMap): Point {

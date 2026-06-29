@@ -3,7 +3,7 @@ import { resolveAnchor } from "./anchors";
 import { PerceptionFrame } from "../types";
 
 function frame(partial: Partial<PerceptionFrame>): PerceptionFrame {
-  return { hands: [], mouth: null, objects: [], width: 1280, height: 720, ...partial };
+  return { hands: [], mouth: null, pose: null, objects: [], width: 1280, height: 720, ...partial };
 }
 
 describe("resolveAnchor", () => {
